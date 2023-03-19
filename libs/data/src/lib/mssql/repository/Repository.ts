@@ -8,7 +8,6 @@ export abstract class Repository<T> implements IRepository<T> {
 
   constructor(protected connection: Sequelize, protected table: string) {}
 
-
   async getAll(): Promise<T[]> {
     const procedure = `EXEC GET_ALL_${this.table}`;
     const options = { type: QueryTypes.SELECT };
@@ -24,19 +23,21 @@ export abstract class Repository<T> implements IRepository<T> {
     return rows[0] as T;
   }
 
-  async create(params: Record<string, string>): Promise<T> {
+  async create(params: any): Promise<T> {
     const procedure = this.buildQuery(`EXEC CREATE_${this.table} `, params);
     const options = { replacements: params, type: QueryTypes.INSERT };
     const cursor = await this.connection.query(procedure, options);
     return cursor[0][0] as T;
   }
 
-  async update(id: string, params: Record<string, string>): Promise<number> {
-    const procedure = this.buildQuery(`EXEC UPDATE_${this.table} `, params);
+  async update(id: string, params: any): Promise<number> {
+    params.id = id;
+    const procedure = this.buildQuery(`EXEC UPDATE_${this.table} :id, `, params);
     const options = { replacements: params, type: QueryTypes.UPDATE };
     const cursor = await this.connection.query(procedure, options);
     return cursor[0].length;
   }
+
   async delete(id: string): Promise<number> {
     const params = { id: id };
     const procedure = this.buildQuery(`EXEC DELETE_${this.table} :id`, { id: id });
@@ -45,7 +46,7 @@ export abstract class Repository<T> implements IRepository<T> {
     return cursor[0].length;
   }
 
-  buildQuery(query: string, params: Record<string, string>): string {
+  buildQuery(query: string, params: any): string {
     let result = query;
     
     const props = Object.keys(params);
@@ -56,5 +57,4 @@ export abstract class Repository<T> implements IRepository<T> {
 
     return result;
   }
-
 }

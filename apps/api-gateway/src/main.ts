@@ -28,6 +28,11 @@ async function bootstrap() {
     changeOrigin: true,
   }));
 
+  app.use('/api/users', createProxyMiddleware({
+    target: RBAC_SERVICE_URL,
+    changeOrigin: true,
+  }));
+
   await app.listen(port);
   Logger.log(
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`

@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { OrgModule } from './org/org.module';
 import { SiteModule } from './site/site.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -11,16 +12,18 @@ import { SiteModule } from './site/site.module';
       dialect: 'mssql',
       host: 'localhost',
       port: 1433,
-      username: 'super_cool_user_name',
-      password: 'super_secret_123',
+      username: 'sa',
+      password: 'Body585Armor@#',
       database: 'rbac',
       models: [],
     }),
     OrgModule,
-    SiteModule
+    SiteModule,
+    UserModule
   ],
   controllers: [],
   providers: [],
   exports:[]
 })
+
 export class AppModule {}

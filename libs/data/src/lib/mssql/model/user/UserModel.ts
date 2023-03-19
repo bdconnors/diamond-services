@@ -7,15 +7,15 @@ export class UserModel extends Model {
 
   @Column
   orgId: number;
+  
+  @Column({ unique: true })
+  email: string;
 
   @Column
   firstName: string;
 
   @Column
   lastName: string;
-
-  @Column
-  email: string;
 
   @Column
   password: string;

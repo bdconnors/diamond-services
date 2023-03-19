@@ -3,9 +3,9 @@ export interface IRepository<T> {
 
   get: (id: string) => Promise<T | null>;
 
-  create: (params: Record<string, string>) => Promise<T>;
+  create: (params: any) => Promise<T>;
 
-  update: (id: string, params: Record<string, string>) => Promise<number>;
+  update: (id: string, params: any) => Promise<number>;
   
   delete: (id: string) => Promise<number>;
 }
