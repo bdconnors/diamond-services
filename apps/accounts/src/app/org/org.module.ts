@@ -1,12 +1,13 @@
 
 import { Module } from '@nestjs/common';
+import { AccountsContext } from '../module/mongo/accounts/accounts.context';
+import { AccountsModule } from '../module/mongo/accounts/accounts.module';
 import { OrgController } from './org.controller';
-import { DatabaseModule } from '../core/database/database.module';
 import { OrgService } from './org.service';
 
 @Module({
   imports: [
-    DatabaseModule
+    AccountsModule
   ],
   controllers: [
     OrgController

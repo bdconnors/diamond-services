@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, ObjectId, Types } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import { Permission } from './permission.schema';
-import { Site } from './site.schema';
 
 export type RoleDocument = Document & Role;
 
@@ -16,9 +15,6 @@ export class Role {
 
   @Prop({ required: true })
   description: string;
-
-  @Prop({ required:true, type: Types.ObjectId, ref: 'Site' })
-  site: Site;
 
   @Prop({ type: [Types.ObjectId], ref: 'Permission' })
   permissions: Permission[];

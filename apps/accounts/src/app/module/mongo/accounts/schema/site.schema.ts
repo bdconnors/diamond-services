@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, ObjectId, Types } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import { Org } from './org.schema';
 import { Role } from './role.schema';
 
@@ -13,6 +13,9 @@ export class Site {
 
   @Prop({ required: true, type: Types.ObjectId, ref: 'Org' })
   org: Org;
+
+  @Prop({ type: [Types.ObjectId], ref: 'Role' })
+  roles:Role[];
 }
 
 export const SiteSchema = SchemaFactory.createForClass(Site);

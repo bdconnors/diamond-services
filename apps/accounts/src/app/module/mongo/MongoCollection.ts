@@ -1,5 +1,5 @@
-import { FilterQuery, Model } from 'mongoose';
-import { IMongoCollection } from './IMongoCollection';
+import { FilterQuery, Model } from 'mongoose';import { IMongoCollection } from './IMongoCollection';
+;
 
 export abstract class MongoCollection<T, K> implements IMongoCollection<T, K> {
 

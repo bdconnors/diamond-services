@@ -1,13 +1,26 @@
+
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, ObjectId, Types } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import { Org } from './org.schema';
 import { Role } from './role.schema';
+import { Site } from './site.schema';
+import * as bcrypt from 'bcrypt';
+
+@Schema()
+export class SiteRole {
+  
+  @Prop({ type: Types.ObjectId, ref: 'Site' })
+  site: Site;
+
+  @Prop({ type: Types.ObjectId, ref: 'Role' })
+  role: Role;
+}
 
 export type UserDocument = Document & User;
 
 @Schema({ timestamps: true, id: true })
 export class User {
-
+  
   @Prop({ required: true })
   firstName: string;
 
@@ -20,12 +33,14 @@ export class User {
   @Prop({ required: true })
   password: string;
 
+  @Prop({ default: false })
+  verified: boolean;
+
   @Prop({ required: true, type: Types.ObjectId, ref: 'Org' })
   org: Org;
   
-  @Prop({ type: [Types.ObjectId], ref: 'Role' })
-  roles: Role[];
+  @Prop()
+  roles: SiteRole[];
 
 }
-
 export const UserSchema = SchemaFactory.createForClass(User);

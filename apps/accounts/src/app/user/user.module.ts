@@ -1,12 +1,15 @@
 
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from '../core/database/database.module';
-import { UserService } from './user.service';
+
 import { UserController } from './user.controller';
+import { UserService } from './user.service';
+import { AccountsModule } from '../module/mongo/accounts/accounts.module';
+import { EncryptionModule } from '../module/encryption/encryption.module';
 
 @Module({
   imports: [
-    DatabaseModule
+    EncryptionModule,
+    AccountsModule
   ],
   controllers: [
     UserController

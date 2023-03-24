@@ -3,6 +3,7 @@ import { Body, Param } from '@nestjs/common/decorators';
 import { AddSiteDto } from './dto/add-site.dto';
 import { SiteService } from './site.service';
 
+
 @Controller('sites')
 export class SiteController {
 
@@ -15,7 +16,7 @@ export class SiteController {
 
   @Get()
   async listSites() {
-    return await this.service.getCollection();
+    return await this.service.getAll();
   }
 
   @Post()

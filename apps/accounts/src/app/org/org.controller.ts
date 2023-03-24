@@ -4,6 +4,7 @@ import { AddOrgDto } from './dto/add-org.dto';
 import { UpdateOrgDto } from './dto/update-org.dto';
 import { OrgService } from './org.service';
 
+
 @Controller('orgs')
 export class OrgController {
 
@@ -11,7 +12,7 @@ export class OrgController {
 
   @Get()
   async listOrgs(){
-    return await this.service.getCollection();
+    return await this.service.getAll();
   }
 
   @Get('/:id')
@@ -26,7 +27,7 @@ export class OrgController {
 
   @Put('/:id')
   async updateOrg(@Param('id') id: string, @Body() dto: UpdateOrgDto){
-    return await this.service.update(id, { name: dto.name });
+    return await this.service.update(id, dto.name);
   }
 
   @Delete()
