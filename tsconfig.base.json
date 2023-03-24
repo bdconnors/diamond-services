@@ -15,12 +15,6 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@diamond/business": ["libs/business/src/index.ts"],
-      "@diamond/data": ["libs/data/src/index.ts"],
-      "@diamond/models": ["libs/models/src/index.ts"],
-      "@diamond/modules": ["libs/modules/src/index.ts"],
-      "@diamond/schemas": ["libs/schemas/src/index.ts"],
-      "@diamond/services": ["libs/services/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

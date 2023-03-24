@@ -1,11 +1,25 @@
-import { Controller, Get } from '@nestjs/common';
-import { SiteRepository } from './site.repository';
+import { Controller, Get, Post } from '@nestjs/common';
+import { Body, Param } from '@nestjs/common/decorators';
+import { AddSiteDto } from './dto/add-site.dto';
+import { SiteService } from './site.service';
 
-@Controller('/sites')
+@Controller('sites')
 export class SiteController {
-  constructor(private repo: SiteRepository) {}
+
+  constructor(private readonly service: SiteService){}
+
+  @Get('/:id')
+  async getSite(@Param('id') id: string) {
+    return await this.service.get(id);
+  }
+
   @Get()
   async listSites() {
-    return await this.repo.getAll();
+    return await this.service.getCollection();
+  }
+
+  @Post()
+  async addSite(@Body() dto: AddSiteDto){
+    return await this.service.add(dto.orgId, dto.name);
   }
 }

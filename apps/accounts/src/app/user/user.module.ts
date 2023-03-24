@@ -1,17 +1,22 @@
 
 import { Module } from '@nestjs/common';
-import { UserRepository } from './user.repository';
-import { UserModel } from '@diamond/data';
-import { SequelizeModule } from '@nestjs/sequelize';
+import { DatabaseModule } from '../core/database/database.module';
+import { UserService } from './user.service';
 import { UserController } from './user.controller';
-import { BCryptModule } from '@diamond/modules';
+
 @Module({
   imports: [
-    SequelizeModule.forFeature([UserModel]),
-    BCryptModule
+    DatabaseModule
   ],
-  controllers:[UserController],
-  providers: [UserRepository],
-  exports:[UserRepository]
+  controllers: [
+    UserController
+  ],
+  providers: [
+    UserService
+  ],
+  exports:[
+    UserService
+  ]
 })
+
 export class UserModule {}

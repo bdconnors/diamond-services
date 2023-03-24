@@ -15,21 +15,16 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3330;
 
-  const RBAC_SERVICE_URL = "http://127.0.0.1:3333";
+  const ACCOUNT_SERVICE_URL = "http://127.0.0.1:3333";
 
   // Proxy endpoints
   app.use('/api/orgs', createProxyMiddleware({
-    target: RBAC_SERVICE_URL,
+    target: ACCOUNT_SERVICE_URL,
     changeOrigin: true,
   }));
 
   app.use('/api/sites', createProxyMiddleware({
-    target: RBAC_SERVICE_URL,
-    changeOrigin: true,
-  }));
-
-  app.use('/api/users', createProxyMiddleware({
-    target: RBAC_SERVICE_URL,
+    target: ACCOUNT_SERVICE_URL,
     changeOrigin: true,
   }));
 

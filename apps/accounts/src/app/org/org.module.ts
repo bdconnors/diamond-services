@@ -1,14 +1,22 @@
 
 import { Module } from '@nestjs/common';
-import { OrgRepository } from './org.repository';
-import { Org } from '@diamond/data';
-import { SequelizeModule } from '@nestjs/sequelize';
 import { OrgController } from './org.controller';
+import { DatabaseModule } from '../core/database/database.module';
+import { OrgService } from './org.service';
 
 @Module({
-  imports: [SequelizeModule.forFeature([Org])],
-  controllers: [OrgController],
-  providers: [OrgRepository],
-  exports:[OrgRepository]
+  imports: [
+    DatabaseModule
+  ],
+  controllers: [
+    OrgController
+  ],
+  providers: [
+    OrgService
+  ],
+  exports:[
+    OrgService
+  ]
 })
+
 export class OrgModule {}

@@ -1,14 +1,22 @@
 
 import { Module } from '@nestjs/common';
-import { SiteRepository } from './site.repository';
-import { SiteModel } from '@diamond/data';
-import { SequelizeModule } from '@nestjs/sequelize';
 import { SiteController } from './site.controller';
+import { DatabaseModule } from '../core/database/database.module';
+import { SiteService } from './site.service';
 
 @Module({
-  imports: [SequelizeModule.forFeature([SiteModel])],
-  controllers:[SiteController],
-  providers: [SiteRepository],
-  exports:[SiteRepository]
+  imports: [
+    DatabaseModule
+  ],
+  controllers: [
+    SiteController
+  ],
+  providers: [
+    SiteService
+  ],
+  exports:[
+    SiteService
+  ]
 })
+
 export class SiteModule {}
