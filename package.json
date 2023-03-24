@@ -22,7 +22,6 @@
     "bcryptjs": "^2.4.3",
     "class-validator": "^0.14.0",
     "http-proxy-middleware": "^2.0.6",
-    "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.2",
     "mssql": "^7.3.5",
     "reflect-metadata": "^0.1.13",
