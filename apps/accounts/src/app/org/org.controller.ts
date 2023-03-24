@@ -20,6 +20,11 @@ export class OrgController {
     return await this.service.get(id);
   }
 
+  @Get('/:id/users')
+  async getUsers(@Param('id') id: string){
+    return await this.service.getUsers(id);
+  }
+
   @Post()
   async addOrg(@Body() dto: AddOrgDto){
     return await this.service.add(dto.name);

@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { Types } from "mongoose";
 import { AccountsContext } from "../module/mongo/accounts/accounts.context";
 
 
@@ -18,6 +19,14 @@ export class OrgService {
 
   async getAll(){
     return await this.db.orgs.findAll();
+  }
+
+  async getUsers(orgId: string) {
+    const query = await this.db.users.filter({ org: new Types.ObjectId(orgId) })
+      .populate('org')
+      .populate('roles')
+      .exec();
+      return query;
   }
 
   async update(id: string, name: string) {
