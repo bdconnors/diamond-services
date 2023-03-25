@@ -3,7 +3,7 @@ import { AccountsContext, Org, SiteRole } from "@diamond/mongo";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
-export class UserService {
+export class AppService {
 
   constructor(
     protected readonly db: AccountsContext,

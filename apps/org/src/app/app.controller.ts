@@ -2,13 +2,13 @@ import { Controller, Get, Post } from '@nestjs/common';
 import { Body, Delete, Param, Put } from '@nestjs/common/decorators';
 import { AddOrgDto } from './dto/add-org.dto';
 import { UpdateOrgDto } from './dto/update-org.dto';
-import { OrgService } from './org.service';
+import { AppService } from './app.service';
 
 
 @Controller('orgs')
-export class OrgController {
+export class AppController {
 
-  constructor(private readonly service: OrgService){}
+  constructor(private readonly service: AppService){}
 
   @Get()
   async listOrgs(){

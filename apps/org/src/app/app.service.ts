@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { Types } from "mongoose";
 
 @Injectable()
-export class OrgService {
+export class AppService {
   constructor(protected readonly db: AccountsContext){}
 
 

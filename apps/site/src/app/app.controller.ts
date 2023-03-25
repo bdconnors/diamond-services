@@ -1,13 +1,13 @@
 import { Controller, Get, Post } from '@nestjs/common';
 import { Body, Param } from '@nestjs/common/decorators';
+import { AppService } from './app.service';
 import { AddSiteDto } from './dto/add-site.dto';
-import { SiteService } from './site.service';
 
 
 @Controller('sites')
-export class SiteController {
+export class AppController {
 
-  constructor(private readonly service: SiteService){}
+  constructor(private readonly service: AppService){}
 
   @Get('/:id')
   async getSite(@Param('id') id: string) {

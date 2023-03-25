@@ -15,21 +15,22 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3330;
 
-  const ACCOUNT_SERVICE_URL = "http://127.0.0.1:3333";
-
+  const ORG_SERVICE_URL = process.env.ORG_URL || "http://127.0.0.1:3331";
+  const SITE_SERVICE_URL = process.env.SITE_URL || "http://127.0.0.1:3332";
+  const USER_SERVICE_URL = process.env.USER_URL || "http://127.0.0.1:3333";
   // Proxy endpoints
   app.use('/api/orgs', createProxyMiddleware({
-    target: ACCOUNT_SERVICE_URL,
+    target: ORG_SERVICE_URL,
     changeOrigin: true,
   }));
 
   app.use('/api/sites', createProxyMiddleware({
-    target: ACCOUNT_SERVICE_URL,
+    target: SITE_SERVICE_URL,
     changeOrigin: true,
   }));
 
   app.use('/api/users', createProxyMiddleware({
-    target: ACCOUNT_SERVICE_URL,
+    target: USER_SERVICE_URL,
     changeOrigin: true,
   }));
 

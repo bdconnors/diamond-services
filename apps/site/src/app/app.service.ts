@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common"
 
 
 @Injectable()
-export class SiteService {
+export class AppService {
 
   constructor(protected readonly db: AccountsContext){}
 

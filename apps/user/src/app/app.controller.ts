@@ -1,12 +1,12 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { AddRoleDto } from './dto/add-role.dto';
 import { AddUserDto } from './dto/add-user.dto';
-import { UserService } from './user.service';
+import { AppService } from './app.service';
 
 @Controller('users')
-export class UserController {
+export class AppController {
 
-  constructor(private readonly service: UserService){}
+  constructor(private readonly service: AppService){}
   
   @Post()
   async addUser(@Body() dto: AddUserDto) {
