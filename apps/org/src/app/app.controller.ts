@@ -3,6 +3,7 @@ import { Body, Delete, Param, Put } from '@nestjs/common/decorators';
 import { AddOrgDto } from './dto/add-org.dto';
 import { UpdateOrgDto } from './dto/update-org.dto';
 import { AppService } from './app.service';
+import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices';
 
 
 @Controller('orgs')
@@ -10,7 +11,13 @@ export class AppController {
 
   constructor(private readonly service: AppService){}
 
-  @Get()
+  @MessagePattern('list')
+  list(@Payload() data: object, @Ctx() context: RmqContext) {
+    console.log(data);
+    return this.service.getAll();
+  }
+  
+  /**@Get()
   async listOrgs(){
     return await this.service.getAll();
   }
@@ -38,5 +45,5 @@ export class AppController {
   @Delete()
   async deleteOrg(@Param('id') id: string) {
     return await this.service.delete(id);
-  }
+  }**/
 }

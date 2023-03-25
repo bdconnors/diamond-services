@@ -3,6 +3,7 @@ import { AddRoleDto } from './dto/add-role.dto';
 import { AddUserDto } from './dto/add-user.dto';
 import { AppService } from './app.service';
 import { ValidateCredentialsReqDto, ValidateCredentialsResDto } from './dto/validate-credentials.dto';
+import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices';
 
 
 
@@ -10,8 +11,14 @@ import { ValidateCredentialsReqDto, ValidateCredentialsResDto } from './dto/vali
 export class AppController {
 
   constructor(private readonly service: AppService){}
+
+  @MessagePattern('list')
+  list(@Payload() data: object, @Ctx() context: RmqContext) {
+    console.log(data);
+    return this.service.getAll();
+  }
   
-  @Post()
+  /**@Post()
   async addUser(@Body() dto: AddUserDto) {
     return await this.service.add(dto.orgId, dto.firstName, dto.lastName, dto.email, dto.password);
   }
@@ -35,5 +42,5 @@ export class AppController {
   @Put('/:id/addRole')
   async addRole(@Param('id') id: string, @Body() dto: AddRoleDto) {
     return await this.service.addRole(id, dto.siteId, dto.roleId);
-  }
+  }**/
 }

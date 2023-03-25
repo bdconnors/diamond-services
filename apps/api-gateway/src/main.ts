@@ -40,12 +40,12 @@ async function bootstrap() {
   const port = process.env.PORT || 3330;
 
   //proxy endpoints
-  endpoints.forEach((endpoint: ServiceEndpoint)=> {
+  /**endpoints.forEach((endpoint: ServiceEndpoint)=> {
     app.use(endpoint.path, createProxyMiddleware({
       target: endpoint.url,
       changeOrigin: true,
     }));
-  });
+  });**/
 
   await app.listen(port);
   Logger.log(

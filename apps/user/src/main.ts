@@ -7,8 +7,10 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
+  /**const app = await NestFactory.create(AppModule);
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
@@ -17,6 +19,21 @@ async function bootstrap() {
   Logger.log(
     `🚀 User Service Running on http://127.0.0.1:${port}/${globalPrefix}`
   );
+  );**/
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+    AppModule, 
+    {
+      transport: Transport.RMQ,
+      options: {
+        urls: ['amqp://localhost:5672'],
+        queue: 'USER_QUEUE',
+        queueOptions: {
+          durable: false
+        },
+      },
+    }
+  );
+  await app.listen();
 }
 
 bootstrap();
