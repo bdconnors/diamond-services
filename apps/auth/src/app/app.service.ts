@@ -23,7 +23,7 @@ export class AppService {
       throw e;
     }
   }
-  private async validate(email: string, password: string):Promise<boolean> {
+  async validate(email: string, password: string):Promise<boolean> {
     try{
       const endpoint = `${process.env.USER_SERVICE_URL}/validate`;
       const body = { email: email, password: password };
@@ -34,7 +34,7 @@ export class AppService {
     }
   }
 
-  private sign(data: object): string {
+  sign(data: object): string {
     const alg: Algorithm = process.env.ALG as Algorithm;
     const key: string = process.env.SECRET;
     return jwt.sign(data, key)

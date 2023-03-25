@@ -8,18 +8,23 @@ export class AppController {
   constructor(private readonly service: AppService) {}
 
   @Post('/orgs/:cmd')
-  async orgs(@Param('cmd') cmd: string, @Body() data?: PayloadDto) {
+  async orgs(@Param('cmd') cmd: string, @Body() data?: any) {
     return await this.service.orgMessage(cmd, data);
   }
 
   @Post('/sites/:cmd')
-  async sites(@Param('cmd') cmd: string, @Body() data?: PayloadDto) {
+  async sites(@Param('cmd') cmd: string, @Body() data?: any) {
     return await this.service.siteMessage(cmd, data);
   }
 
   
   @Post('/users/:cmd')
-  async users(@Param('cmd') cmd: string, @Body() data?: PayloadDto) {
+  async users(@Param('cmd') cmd: string, @Body() data?: any) {
     return await this.service.userMessage(cmd, data);
+  }
+
+  @Post('/auth/:cmd')
+  async auth(@Param('cmd') cmd: string, @Body() data?: any) {
+    return await this.service.authMessage(cmd, data);
   }
 }

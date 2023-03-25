@@ -1,7 +1,8 @@
+import { User } from "@diamond/mongo";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsBoolean, IsString } from "class-validator";
 
-export class ValidateCredentialsReqDto {
+export class ValidateReqDto {
   @ApiProperty()
   @IsString()
   email: string;
@@ -11,8 +12,9 @@ export class ValidateCredentialsReqDto {
   password: string; 
 }
 
-export class ValidateCredentialsResDto {
+export class ValidateResDto {
   @ApiProperty()
   @IsBoolean()
   success: boolean;
+  user?: User
 }

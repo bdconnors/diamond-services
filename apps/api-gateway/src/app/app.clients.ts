@@ -1,12 +1,12 @@
 import { ClientProviderOptions, ClientsModuleOptions, Transport } from "@nestjs/microservices";
 
-const ClientNames: string[] = ['ORG', 'SITE', 'USER'];
+const ClientNames: string[] = ['ORG', 'SITE', 'USER', 'AUTH'];
 
 export const makeClientProviderOption = (name: string): ClientProviderOptions => ({ 
   name: `${name}_SERVICE`, 
   transport: Transport.RMQ,
   options: {
-    urls: [process.env.RABBITMQ_URL],
+    urls: [process.env.RABBITMPQ_URL],
     queue: `${name}_QUEUE`,
     queueOptions: {
       durable: false

@@ -1,18 +1,27 @@
 import { EncryptionService } from "@diamond/encryption";
 import { AccountsContext, Org, SiteRole } from "@diamond/mongo";
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { ClientProxy, ClientRMQ } from "@nestjs/microservices";
+import { ValidateResDto } from "./dto/validate.dto";
 
 @Injectable()
 export class AppService {
 
   constructor(
+    @Inject('AUTH_SERVICE') private auth: ClientRMQ,
     protected readonly db: AccountsContext,
     protected readonly encryption: EncryptionService
   ){}
   
-  async validateCredentials(email: string, plainTxtPassword: string):Promise<boolean> {
+  async authenticate(email: string, plainTxtPassword: string) {
+
     const user = await this.getByEmail(email);
-    return await this.encryption.validate(plainTxtPassword, user.password);
+    const success = await this.encryption.validate(plainTxtPassword, user.password);
+    if(success) {
+      return this.auth.send('sign', user);
+    } else{
+      return undefined;
+    }
   }
 
   async addRole(userId: string, siteId: string, roleId: string) {

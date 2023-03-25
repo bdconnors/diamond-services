@@ -2,7 +2,6 @@ import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { AddRoleDto } from './dto/add-role.dto';
 import { AddUserDto } from './dto/add-user.dto';
 import { AppService } from './app.service';
-import { ValidateCredentialsReqDto, ValidateCredentialsResDto } from './dto/validate-credentials.dto';
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices';
 
 
@@ -13,11 +12,16 @@ export class AppController {
   constructor(private readonly service: AppService){}
 
   @MessagePattern('list')
-  list(@Payload() data: object, @Ctx() context: RmqContext) {
+  list(@Payload() data: any, @Ctx() context: RmqContext) {
+    console.log(context);
     console.log(data);
     return this.service.getAll();
   }
-  
+
+  @MessagePattern('login')
+  async validate(@Payload() data: any, @Ctx() context: RmqContext) {
+    return await this.service.authenticate(data.email, data.password);
+  }
   /**@Post()
   async addUser(@Body() dto: AddUserDto) {
     return await this.service.add(dto.orgId, dto.firstName, dto.lastName, dto.email, dto.password);
