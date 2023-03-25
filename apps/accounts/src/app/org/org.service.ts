@@ -1,7 +1,6 @@
+import { AccountsContext } from "@diamond/mongo";
 import { Injectable } from "@nestjs/common";
 import { Types } from "mongoose";
-import { AccountsContext } from "../module/mongo/accounts/accounts.context";
-
 
 @Injectable()
 export class OrgService {

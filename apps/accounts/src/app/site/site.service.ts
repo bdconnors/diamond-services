@@ -1,7 +1,5 @@
+import { AccountsContext, Org, Role } from "@diamond/mongo";
 import { Injectable } from "@nestjs/common"
-import { AccountsContext } from "../module/mongo/accounts/accounts.context";
-import { Org } from "../module/mongo/accounts/schema/org.schema";
-import { Role } from "../module/mongo/accounts/schema/role.schema";
 
 
 @Injectable()

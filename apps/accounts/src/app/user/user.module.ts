@@ -1,10 +1,10 @@
 
 import { Module } from '@nestjs/common';
-
+import { EncryptionModule } from '@diamond/encryption';
+import { AccountsModule } from '@diamond/mongo';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { AccountsModule } from '../module/mongo/accounts/accounts.module';
-import { EncryptionModule } from '../module/encryption/encryption.module';
+
 
 @Module({
   imports: [

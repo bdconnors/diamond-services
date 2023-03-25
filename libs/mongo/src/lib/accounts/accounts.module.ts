@@ -24,8 +24,7 @@ import { User, UserSchema } from "./schema/user.schema";
       { name: Permission.name, schema: PermissionSchema },
       { name: User.name, schema: UserSchema }
   
-    ]),
-    MongooseModule.forRoot(process.env.MONGO_DB_CONN),
+    ])
   ],
   providers: [
     OrgCollection,

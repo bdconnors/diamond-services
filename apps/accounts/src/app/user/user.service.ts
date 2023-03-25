@@ -1,8 +1,6 @@
+import { EncryptionService } from "@diamond/encryption";
+import { AccountsContext, Org, SiteRole } from "@diamond/mongo";
 import { Injectable } from "@nestjs/common";
-import { AccountsContext } from "../module/mongo/accounts/accounts.context";
-import { Org } from "../module/mongo/accounts/schema/org.schema";
-import { SiteRole } from "../module/mongo/accounts/schema/user.schema";
-import { EncryptionService } from "../module/encryption/encryption.service";
 
 @Injectable()
 export class UserService {
@@ -13,7 +11,9 @@ export class UserService {
   ){}
 
   async addRole(userId: string, siteId: string, roleId: string) {
+
     let user = await this.db.users.findById(userId).exec();
+
     const role = await this.makeSiteRole(siteId, roleId);
     user.roles.push(role);
     user = await this.db.users.updateById(userId, user);
@@ -24,8 +24,10 @@ export class UserService {
   }
 
   async add(orgId: string, fname: string, lname: string, email: string, pass: string) {
+
     const org: Org = await this.db.orgs.findById(orgId);
     const encryptedPass = await this.encryption.encrypt(pass);
+
     let user = await this.db.users.create({
       firstName: fname,
       lastName: lname,
@@ -73,14 +75,16 @@ export class UserService {
   async updateInfo(id: string, fname?: string, lname?:string, email?: string, pass?: string) {
     let user = await this.db.users.findById(id);
 
+    //if value is new, update it. Otherwise leave the same.
     user.firstName = fname ? fname : user.firstName;
     user.lastName = lname ? lname : user.lastName;
     user.email = email ? email : user.email;
     user.verified = email ? false : user.verified;
+    //encrypt plain text value
     user.password = pass ? await this.encryption.encrypt(pass) : user.password;
 
     user = await this.db.users.updateById(id, user);
-
+    
     user = await user.populate('org');
     user = await user.populate('roles');
     
@@ -90,6 +94,7 @@ export class UserService {
   private async makeSiteRole(siteId: string, roleId: string): Promise<SiteRole> {
     const site = await this.db.sites.findById(siteId);
     const role = await this.db.roles.findById(roleId);
+    
     return { site: site, role: role };
   }
 }

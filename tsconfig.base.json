@@ -15,6 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@diamond/encryption": ["libs/encryption/src/index.ts"],
+      "@diamond/mongo": ["libs/mongo/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

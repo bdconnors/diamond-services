@@ -1,7 +1,6 @@
 
+import { AccountsModule } from '@diamond/mongo';
 import { Module } from '@nestjs/common';
-import { AccountsContext } from '../module/mongo/accounts/accounts.context';
-import { AccountsModule } from '../module/mongo/accounts/accounts.module';
 import { OrgController } from './org.controller';
 import { OrgService } from './org.service';
 

@@ -1,10 +1,9 @@
-
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { Org } from './org.schema';
 import { Role } from './role.schema';
 import { Site } from './site.schema';
-import * as bcrypt from 'bcrypt';
+
 
 @Schema()
 export class SiteRole {
