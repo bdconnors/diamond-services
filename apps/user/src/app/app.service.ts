@@ -9,6 +9,11 @@ export class AppService {
     protected readonly db: AccountsContext,
     protected readonly encryption: EncryptionService
   ){}
+  
+  async validateCredentials(email: string, plainTxtPassword: string):Promise<boolean> {
+    const user = await this.getByEmail(email);
+    return await this.encryption.validate(plainTxtPassword, user.password);
+  }
 
   async addRole(userId: string, siteId: string, roleId: string) {
 

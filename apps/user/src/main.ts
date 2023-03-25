@@ -15,7 +15,7 @@ async function bootstrap() {
   const port = process.env.PORT || 3333;
   await app.listen(port);
   Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
+    `🚀 User Service Running on http://127.0.0.1:${port}/${globalPrefix}`
   );
 }
 

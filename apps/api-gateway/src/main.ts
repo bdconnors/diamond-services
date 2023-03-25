@@ -8,6 +8,30 @@ import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
 
+class ServiceEndpoint {
+  path: string;
+  url: string;
+}
+
+const endpoints: ServiceEndpoint[] = [
+  {
+    path: '/api/orgs',
+    url: `${process.env.SERVICE_HOST}:${process.env.ORG_PORT}`
+  },
+  {
+    path: '/api/sites',
+    url: `${process.env.SERVICE_HOST}:${process.env.SITE_PORT}`
+  },
+  {
+    path: '/api/users',
+    url: `${process.env.SERVICE_HOST}:${process.env.USER_PORT}`
+  },
+  {
+    path: '/api/jwt',
+    url: `${process.env.SERVICE_HOST}:${process.env.JWT_PORT}`
+  }
+];
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
@@ -15,28 +39,17 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3330;
 
-  const ORG_SERVICE_URL = process.env.ORG_URL || "http://127.0.0.1:3331";
-  const SITE_SERVICE_URL = process.env.SITE_URL || "http://127.0.0.1:3332";
-  const USER_SERVICE_URL = process.env.USER_URL || "http://127.0.0.1:3333";
-  // Proxy endpoints
-  app.use('/api/orgs', createProxyMiddleware({
-    target: ORG_SERVICE_URL,
-    changeOrigin: true,
-  }));
-
-  app.use('/api/sites', createProxyMiddleware({
-    target: SITE_SERVICE_URL,
-    changeOrigin: true,
-  }));
-
-  app.use('/api/users', createProxyMiddleware({
-    target: USER_SERVICE_URL,
-    changeOrigin: true,
-  }));
+  //proxy endpoints
+  endpoints.forEach((endpoint: ServiceEndpoint)=> {
+    app.use(endpoint.path, createProxyMiddleware({
+      target: endpoint.url,
+      changeOrigin: true,
+    }));
+  });
 
   await app.listen(port);
   Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
+    `🚀 Api Gateway is running on: http://127.0.0.1:${port}/${globalPrefix}`
   );
 }
 bootstrap();
