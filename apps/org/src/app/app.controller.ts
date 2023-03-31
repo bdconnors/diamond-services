@@ -12,11 +12,19 @@ export class AppController {
   constructor(private readonly service: AppService){}
 
   @MessagePattern('list')
-  list(@Payload() data: object, @Ctx() context: RmqContext) {
+  async list(@Payload() data: object, @Ctx() context: RmqContext) {
     console.log(data);
-    return this.service.getAll();
+    return await this.service.getAll();
   }
-  
+  @MessagePattern('find')
+  async find(@Payload() data: any, @Ctx() context: RmqContext) {
+    console.log(data);
+    return await this.service.get(data.id);
+  }
+  @MessagePattern('users')
+  async getUsers(@Payload() data: any, @Ctx() context: RmqContext) {
+    return await this.service.getUsers(data.id);
+  }
   /**@Get()
   async listOrgs(){
     return await this.service.getAll();

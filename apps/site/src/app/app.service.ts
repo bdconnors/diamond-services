@@ -1,21 +1,30 @@
-import { AccountsContext, Org, Role } from "@diamond/mongo";
+import { AccountsContext, Org, PermissionCollection, Role, RoleCollection, SiteCollection } from "@diamond/mongo";
 import { Injectable } from "@nestjs/common"
 
 
 @Injectable()
 export class AppService {
 
-  constructor(protected readonly db: AccountsContext){}
+  constructor(
+    protected readonly sites: SiteCollection,
+    protected readonly roles: RoleCollection,
+    protected readonly permissions: PermissionCollection
+  ){}
 
   async get(id: string) {
-    return this.db.sites.findById(id)
+    return this.sites.findById(id)
       .populate('org')
       .populate('roles')
       .populate({ path: 'roles', populate: { path: 'permissions'}});
   }
+  
+  async getRole(id:string) {
+    const role = await this.roles.findById(id);
+    return role.populate('permissions');
+  }
 
   async getAll() {
-    return await this.db.sites.findAll()
+    return await this.sites.findAll()
       .populate('org')
       .populate('roles')
       .populate({ path: 'roles', populate: { path: 'permissions'}});
@@ -23,10 +32,10 @@ export class AppService {
 
   async add(orgId: string, name: string) {
 
-    const roles: Role[] = await this.db.roles.findAll();
-    const org: Org = await this.db.orgs.findById(orgId);
+    const roles: Role[] = await this.roles.findAll();
+    const org: Org = await this.sites.findById(orgId);
 
-    let site = await this.db.sites.create({ org: org, name: name, roles: roles });
+    let site = await this.sites.create({ org: org, name: name, roles: roles });
         
     site = await site.populate('org');
     site = await site.populate('roles');

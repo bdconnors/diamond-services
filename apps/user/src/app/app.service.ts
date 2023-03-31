@@ -1,36 +1,41 @@
 import { EncryptionService } from "@diamond/encryption";
-import { AccountsContext, Org, SiteRole } from "@diamond/mongo";
+import { AccountsContext, Org, SiteRole, UserCollection } from "@diamond/mongo";
 import { Inject, Injectable } from "@nestjs/common";
 import { ClientProxy, ClientRMQ } from "@nestjs/microservices";
-import { ValidateResDto } from "./dto/validate.dto";
+import { Types } from "mongoose";
+import { lastValueFrom } from "rxjs";
+import validator from "validator";
+import { ListUsersDto } from "./dto/list-users.dto";
+import { LoginResultDto } from "./dto/login-result.dto";
 
 @Injectable()
 export class AppService {
 
   constructor(
-    @Inject('AUTH_SERVICE') private auth: ClientRMQ,
-    protected readonly db: AccountsContext,
+    @Inject('SITE_SERVICE') private sites: ClientRMQ,
+    @Inject('ORG_SERVICE') private orgs: ClientRMQ,
+    protected readonly users: UserCollection,
     protected readonly encryption: EncryptionService
   ){}
   
-  async authenticate(email: string, plainTxtPassword: string) {
-
+  /**async authenticate(email: string, plainTxtPassword: string): Promise<LoginResultDto> {
+    let token = undefined;
     const user = await this.getByEmail(email);
     const success = await this.encryption.validate(plainTxtPassword, user.password);
     if(success) {
-      return this.auth.send('sign', user);
-    } else{
-      return undefined;
+      const msgSource = this.auth.send('sign', user).pipe();
+      token = await lastValueFrom<string>(msgSource);
     }
-  }
+    return { success: success, token: token };
+  }**/
 
   async addRole(userId: string, siteId: string, roleId: string) {
 
-    let user = await this.db.users.findById(userId).exec();
+    let user = await this.users.findById(userId).exec();
 
     const role = await this.makeSiteRole(siteId, roleId);
     user.roles.push(role);
-    user = await this.db.users.updateById(userId, user);
+    user = await this.users.updateById(userId, user);
     user = await user.populate('org');
     user = await user.populate('roles');
 
@@ -38,11 +43,13 @@ export class AppService {
   }
 
   async add(orgId: string, fname: string, lname: string, email: string, pass: string) {
+    
+    const msg = await this.orgs.send('find', { id: orgId });
+    const org = await lastValueFrom(msg);
 
-    const org: Org = await this.db.orgs.findById(orgId);
     const encryptedPass = await this.encryption.encrypt(pass);
 
-    let user = await this.db.users.create({
+    let user = await this.users.create({
       firstName: fname,
       lastName: lname,
       email: email,
@@ -50,44 +57,50 @@ export class AppService {
       verified: false,
       org: org,
       roles:[]
-    })
+    });
+    
     user = await user.populate('org');
     user = await user.populate('roles');
+    
     return user;
   }
 
 
   async get(id: string) {
-    return await this.db.users.findById(id) 
+    return await this.users.findById(id) 
       .populate('org')
       .populate('roles');
   }
 
   async getByEmail(email: string) {
-    const results = await this.db.users.filter({ email: email })
+    const results = await this.users.filter({ email: email })
       .populate('org')
       .populate('roles');
     return results[0];
   }
 
   async getOrgUsers(orgId: string) {
-    return await this.db.users.filter({ org: orgId })
+    console.log(orgId);
+    const result = await this.users.filter({ org: new Types.ObjectId(orgId) })
       .populate('org')
       .populate('roles');
+      console.log(result);
+      return result;
   }
 
-  async getAll() {
-    return await this.db.users.findAll()
+  async getAll():Promise<ListUsersDto> {
+    const users = await this.users.findAll()
       .populate('org')
       .populate('roles');
+    return { users: users };
   }
 
   async delete(id: string) {
-    await this.db.users.deleteById(id);
+    await this.users.deleteById(id);
   }
 
   async updateInfo(id: string, fname?: string, lname?:string, email?: string, pass?: string) {
-    let user = await this.db.users.findById(id);
+    let user = await this.users.findById(id);
 
     //if value is new, update it. Otherwise leave the same.
     user.firstName = fname ? fname : user.firstName;
@@ -97,7 +110,7 @@ export class AppService {
     //encrypt plain text value
     user.password = pass ? await this.encryption.encrypt(pass) : user.password;
 
-    user = await this.db.users.updateById(id, user);
+    user = await this.users.updateById(id, user);
     
     user = await user.populate('org');
     user = await user.populate('roles');
@@ -106,8 +119,10 @@ export class AppService {
   }
 
   private async makeSiteRole(siteId: string, roleId: string): Promise<SiteRole> {
-    const site = await this.db.sites.findById(siteId);
-    const role = await this.db.roles.findById(roleId);
+    const siteMsg = await this.sites.send('find', { id: siteId }).pipe();
+    const roleMsg = await this.sites.send('findRole', { id: roleId });
+    const site = await lastValueFrom(siteMsg);
+    const role = await lastValueFrom(roleMsg);
     
     return { site: site, role: role };
   }

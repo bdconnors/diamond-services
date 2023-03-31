@@ -11,9 +11,19 @@ export class AppController {
   constructor(private readonly service: AppService){}
   
   @MessagePattern('list')
-  list(@Payload() data: object, @Ctx() context: RmqContext) {
+  list(@Payload() data: any, @Ctx() context: RmqContext) {
     console.log(data);
     return this.service.getAll();
+  }
+  @MessagePattern('find')
+  find(@Payload() data: any, @Ctx() context: RmqContext) {
+    console.log(data);
+    return this.service.get(data.id);
+  }
+  @MessagePattern('findRole')
+  findRole(@Payload() data: any, @Ctx() context: RmqContext) {
+    console.log(data);
+    return this.service.get(data.id);
   }
   /**@Get('/:id')
   async getSite(@Param('id') id: string) {

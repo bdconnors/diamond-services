@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { MongoCollection } from '../../MongoCollection';
-import { Site, SiteDocument } from '../schema/site.schema';
+import { Org, OrgDocument } from './org.schema';
 
 @Injectable()
-export class  SiteCollection extends MongoCollection<SiteDocument, Site> {
-  constructor(@InjectModel(Site.name) protected model: Model<SiteDocument>){
+export class OrgCollection extends MongoCollection<OrgDocument, Org> {
+  constructor(@InjectModel(Org.name) protected model: Model<OrgDocument>){
     super(model);
   }
 }

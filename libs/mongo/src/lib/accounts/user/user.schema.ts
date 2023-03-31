@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { Org } from './org.schema';
-import { Role } from './role.schema';
-import { Site } from './site.schema';
+import { Org } from '../org/org.schema';
+import { Role } from '../role/role.schema';
+import { Site } from '../site/site.schema';
 
 
 @Schema()

@@ -1,4 +1,4 @@
-import { AccountsModule } from '@diamond/mongo';
+import { AccountsModule, OrgModule, PermissionCollection, PermissionModule, RoleCollection, RoleModule, SiteCollection, SiteModule } from '@diamond/mongo';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -10,7 +10,10 @@ import { AppService } from './app.service';
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_DB_CONN),
-    AccountsModule
+    SiteModule,
+    RoleModule,
+    PermissionModule,
+    OrgModule
   ],
   controllers: [
     AppController

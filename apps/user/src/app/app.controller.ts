@@ -18,9 +18,25 @@ export class AppController {
     return this.service.getAll();
   }
 
-  @MessagePattern('login')
+  /**@MessagePattern('login')
   async validate(@Payload() data: any, @Ctx() context: RmqContext) {
     return await this.service.authenticate(data.email, data.password);
+  }**/
+
+  @MessagePattern('register')
+  async create(@Payload() data: AddUserDto, @Ctx() context: RmqContext) {
+    return await this.service.add(
+      data.orgId, 
+      data.firstName, 
+      data.lastName, 
+      data.email, 
+      data.password
+    );
+  }
+  
+  @MessagePattern('byOrgId')
+  async getByOrgId(@Payload() data: any, @Ctx() context: RmqContext) {
+    return await this.service.getOrgUsers(data.id);
   }
   /**@Post()
   async addUser(@Body() dto: AddUserDto) {

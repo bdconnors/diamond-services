@@ -1,40 +1,47 @@
-import { AccountsContext } from "@diamond/mongo";
-import { Injectable } from "@nestjs/common";
-import { Types } from "mongoose";
+import { OrgCollection } from "@diamond/mongo";
+import { Inject, Injectable } from "@nestjs/common";
+import { ClientRMQ } from "@nestjs/microservices";
+import { lastValueFrom } from "rxjs";
 
 @Injectable()
 export class AppService {
-  constructor(protected readonly db: AccountsContext){}
+  constructor(
+    @Inject('USER_SERVICE') private users: ClientRMQ,
+    protected readonly orgs: OrgCollection
+  ){}
 
 
   async add(name: string) {
-    return await this.db.orgs.create({ name: name });
+    return await this.orgs.create({ name: name });
   }
 
   async get(id: string) {
-    let org = await this.db.orgs.findById(id);
+    let org = await this.orgs.findById(id);
     return org;
   }
 
   async getAll(){
-    return await this.db.orgs.findAll();
+    return await this.orgs.findAll();
   }
 
   async getUsers(orgId: string) {
-    const query = await this.db.users.filter({ org: new Types.ObjectId(orgId) })
-      .populate('org')
-      .populate('roles')
-      .exec();
-      return query;
+    console.log('org svc')
+    console.log(orgId);
+    try{
+      const msg = await this.users.send('byOrgId', { id: orgId });
+      return await lastValueFrom(msg);
+    }catch(e:any) {
+      throw e;
+    }
   }
 
   async update(id: string, name: string) {
     let org = await this.get(id);
     org.name = name;
-    org = await this.db.orgs.updateById(id, org);
+    org = await this.orgs.updateById(id, org);
   }
 
   async delete(id: string) {
-    await this.db.orgs.deleteById(id);
+    await this.orgs.deleteById(id);
   }
 }

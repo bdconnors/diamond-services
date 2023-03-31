@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { OrgCollection } from "./collection/org.collection";
-import { PermissionCollection } from "./collection/permission.collection";
-import { RoleCollection } from "./collection/role.collection";
-import { SiteCollection } from "./collection/site.collection";
-import { UserCollection } from "./collection/user.collection";
+import { OrgCollection } from "./org/org.collection";
+import { PermissionCollection } from "./permission/permission.collection";
+import { RoleCollection } from "./role/role.collection";
+import { SiteCollection } from "./site/site.collection";
+import { UserCollection } from "./user/user.collection";
 ;
-import { Permission } from "./schema/permission.schema";
-import { Role } from "./schema/role.schema";
+import { Permission } from "./permission/permission.schema";
+import { Role } from "./role/role.schema";
 
 @Injectable()
 export class AccountsContext {
