@@ -4,8 +4,6 @@ import { AddUserDto } from './dto/add-user.dto';
 import { AppService } from './app.service';
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices';
 
-
-
 @Controller('users')
 export class AppController {
 
@@ -17,11 +15,6 @@ export class AppController {
     console.log(data);
     return this.service.getAll();
   }
-
-  /**@MessagePattern('login')
-  async validate(@Payload() data: any, @Ctx() context: RmqContext) {
-    return await this.service.authenticate(data.email, data.password);
-  }**/
 
   @MessagePattern('register')
   async create(@Payload() data: AddUserDto, @Ctx() context: RmqContext) {

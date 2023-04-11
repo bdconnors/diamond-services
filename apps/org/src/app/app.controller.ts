@@ -1,57 +1,36 @@
 import { Controller, Get, Post } from '@nestjs/common';
-import { Body, Delete, Param, Put } from '@nestjs/common/decorators';
+import { Body, Inject, Param} from '@nestjs/common/decorators';
 import { AddOrgDto } from './dto/add-org.dto';
-import { UpdateOrgDto } from './dto/update-org.dto';
 import { AppService } from './app.service';
-import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices';
+import { ClientRMQ } from '@nestjs/microservices';
 
 
 @Controller('orgs')
 export class AppController {
 
-  constructor(private readonly service: AppService){}
+  constructor(
+    private readonly service: AppService,
+    @Inject('LOGGER_SERVICE') private logger: ClientRMQ,
+  ){}
 
-  @MessagePattern('list')
-  async list(@Payload() data: object, @Ctx() context: RmqContext) {
-    console.log(data);
-    return await this.service.getAll();
-  }
-  @MessagePattern('find')
-  async find(@Payload() data: any, @Ctx() context: RmqContext) {
-    console.log(data);
-    return await this.service.get(data.id);
-  }
-  @MessagePattern('users')
-  async getUsers(@Payload() data: any, @Ctx() context: RmqContext) {
-    return await this.service.getUsers(data.id);
-  }
-  /**@Get()
-  async listOrgs(){
-    return await this.service.getAll();
+  @Get()
+  async list() {
+    const orgs = await this.service.getAll();
+    this.logger.emit('info', { method:'GET', action:'READ', description: 'list orgs request', data: orgs });
+    return orgs;
   }
 
-  @Get('/:id')
-  async getOrg(@Param('id') id: string){
-    return await this.service.get(id);
+  @Post('/create')
+  async create(@Body() body: AddOrgDto) {
+    const org = await this.service.add(body.name);
+    this.logger.emit('info', { method:'POST', action:'CREATE', description: 'create org request', data: org });
+    return org;
   }
 
-  @Get('/:id/users')
-  async getUsers(@Param('id') id: string){
-    return await this.service.getUsers(id);
+  @Get(':id')
+  async find(@Param('id') id: string) {
+    const org = await this.service.get(id);
+    this.logger.emit('info', { method:'GET', action:'READ', description: 'get org request', data: org });
+    return org;
   }
-
-  @Post()
-  async addOrg(@Body() dto: AddOrgDto){
-    return await this.service.add(dto.name);
-  }
-
-  @Put('/:id')
-  async updateOrg(@Param('id') id: string, @Body() dto: UpdateOrgDto){
-    return await this.service.update(id, dto.name);
-  }
-
-  @Delete()
-  async deleteOrg(@Param('id') id: string) {
-    return await this.service.delete(id);
-  }**/
 }
