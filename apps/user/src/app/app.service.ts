@@ -17,17 +17,6 @@ export class AppService {
     protected readonly users: UserCollection,
     protected readonly encryption: EncryptionService
   ){}
-  
-  /**async authenticate(email: string, plainTxtPassword: string): Promise<LoginResultDto> {
-    let token = undefined;
-    const user = await this.getByEmail(email);
-    const success = await this.encryption.validate(plainTxtPassword, user.password);
-    if(success) {
-      const msgSource = this.auth.send('sign', user).pipe();
-      token = await lastValueFrom<string>(msgSource);
-    }
-    return { success: success, token: token };
-  }**/
 
   async addRole(userId: string, siteId: string, roleId: string) {
 
@@ -44,7 +33,7 @@ export class AppService {
 
   async add(orgId: string, fname: string, lname: string, email: string, pass: string) {
     
-    const msg = await this.orgs.send('find', { id: orgId });
+    const msg = await this.orgs.send('get', { id: orgId });
     const org = await lastValueFrom(msg);
 
     const encryptedPass = await this.encryption.encrypt(pass);
