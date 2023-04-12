@@ -1,22 +1,25 @@
-import { Controller } from '@nestjs/common';
-import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices';
+import { Body, Controller, Post } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 import { AppService } from './app.service';
+import { LoginReqDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AppController {
   constructor(private readonly service: AppService) {}
-  
-  @MessagePattern('sign')
-  async login(@Payload() data: any, @Ctx() context: RmqContext) {
-    return this.service.sign(data);
-  }
 
-  @MessagePattern('verify')
-  async verify(@Payload() data: any, @Ctx() context: RmqContext) {
-    const result = await this.service.decode(data.token);
+  @Post('/login') 
+  async login(@Body() dto: LoginReqDto ){
+    const token = await this.service.login(dto.email, dto.password);
+    return { token: token };
+  }
+  
+  @MessagePattern('login')
+  async verify(@Payload() data: any) {
+    const result = await this.service.login(data.email, data.password);
     return { data: result };
   }
+  
   /**@Post('/login') 
   async login(@Body() dto: LoginReqDto ){
     const token = await this.service.login(dto.email, dto.password);

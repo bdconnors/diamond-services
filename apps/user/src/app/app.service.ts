@@ -1,12 +1,10 @@
 import { EncryptionService } from "@diamond/encryption";
-import { AccountsContext, Org, SiteRole, UserCollection } from "@diamond/mongo";
+import { SiteRole, UserCollection } from "@diamond/mongo";
 import { Inject, Injectable } from "@nestjs/common";
-import { ClientProxy, ClientRMQ } from "@nestjs/microservices";
+import { ClientRMQ } from "@nestjs/microservices";
 import { Types } from "mongoose";
 import { lastValueFrom } from "rxjs";
-import validator from "validator";
 import { ListUsersDto } from "./dto/list-users.dto";
-import { LoginResultDto } from "./dto/login-result.dto";
 
 @Injectable()
 export class AppService {

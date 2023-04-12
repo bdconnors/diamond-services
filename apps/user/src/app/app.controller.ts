@@ -14,6 +14,7 @@ export class AppController {
 
   @Post()
   async addUser(@Body() dto: AddUserDto) {
+    console.log(dto);
     const user = await this.service.add(dto.orgId, dto.firstName, dto.lastName, dto.email, dto.password);
     this.logger.info('POST', 'CREATE', 'create user request', user);
     return user;
@@ -58,5 +59,12 @@ export class AppController {
     const users = await this.service.getOrgUsers(data.id);
     this.logger.info('MSG','GET', 'get org users message', users);
     return users;
+  }
+
+  @MessagePattern('find')
+  async find(@Payload() data: any) {
+    const user = await this.service.getByEmail(data.email);
+    this.logger.info('MSG','GET', 'get user by email message', user);
+    return user;
   }
 }

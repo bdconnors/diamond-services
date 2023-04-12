@@ -1,5 +1,5 @@
 import { EncryptionModule } from '@diamond/encryption';
-import { AccountsModule, OrgModule, RoleModule, UserModule } from '@diamond/mongo';
+import { OrgModule, RoleModule, UserModule } from '@diamond/mongo';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';

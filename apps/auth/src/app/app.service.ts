@@ -1,10 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import jwt, { Algorithm } from 'jsonwebtoken';
-import axios from 'axios';
-import fs from 'fs';
+import { ClientRMQ } from '@nestjs/microservices';
+import { lastValueFrom } from 'rxjs';
+import { EncryptionService } from '@diamond/encryption';
+import { User } from '@diamond/mongo';
+import { TokenPayloadDto } from './dto/token-payload.dto';
 
 @Injectable()
 export class AppService {
+
+  constructor(
+    @Inject('USER_SERVICE') private users: ClientRMQ,
+    protected readonly encryption: EncryptionService,
+  ){}
 
   async decode(token: string) {
     const key: string = process.env.SECRET;
@@ -13,30 +21,41 @@ export class AppService {
   
   async login(email: string, password: string) {
     try {
-      const success = await this.validate(email, password);
-      if(!success) { throw new Error('login failed');}
-      const endpoint = `${process.env.USER_SERVICE_URL}/${email}`;
-      const response = await axios.get(endpoint);
-      const user = response.data;
+      let success = false;
+      const msg = await this.users.send('find', { email: email });
+      const user = await lastValueFrom(msg);
+      if(user) { 
+        success = await this.encryption.validate(password, user.password);
+      }
+      if(!success) { throw new Error('login failed');};
       return this.sign(user);
     }catch(e){
-      throw e;
-    }
-  }
-  async validate(email: string, password: string):Promise<boolean> {
-    try{
-      const endpoint = `${process.env.USER_SERVICE_URL}/validate`;
-      const body = { email: email, password: password };
-      const response = await axios.post(endpoint, body);
-      return response.data.success;
-    }catch(e) {
+      console.log(e);
       throw e;
     }
   }
 
-  sign(data: object): string {
-    const alg: Algorithm = process.env.ALG as Algorithm;
-    const key: string = process.env.SECRET;
-    return jwt.sign(data, key)
+  getExpiration() {
+    const expires = new Date();
+    const hours = expires.getHours() + 2;
+    expires.setHours(hours);
+    return expires;
   }
+
+  getPayload(user: User): TokenPayloadDto {
+    const expiration = this.getExpiration();
+    const payload: TokenPayloadDto = {
+      user: user,
+      iss: 'auth',
+      exp: expiration
+    };
+    return payload;
+  }
+
+  sign(user: User): string {
+    const key: string = process.env.SECRET;
+    const payload: TokenPayloadDto = this.getPayload(user);
+    return jwt.sign(user, key)
+  }
+
 }
