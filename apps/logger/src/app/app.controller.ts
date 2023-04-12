@@ -1,25 +1,26 @@
-import { Controller, Get } from '@nestjs/common';
-import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices';
+import { Controller } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AppService } from './app.service';
+import { LogEventDto } from './dto/log-event.dto';
 
 @Controller()
 export class AppController {
   constructor(private readonly service: AppService) {}
 
   @MessagePattern('warn')
-  async warn(@Payload() data:  { method:string, description: string, data:any }, @Ctx() context: RmqContext) {
+  async warn(@Payload() data: LogEventDto) {
     this.service.warn(data);
   }
   @MessagePattern('error')
-  async error(@Payload() data:  { method:string, description: string, data:any }, @Ctx() context: RmqContext) {
+  async error(@Payload() data: LogEventDto) {
     this.service.warn(data);
   }
   @MessagePattern('info')
-  async info(@Payload() data:  { method:string, description: string, data:any }, @Ctx() context: RmqContext) {
+  async info(@Payload() data: LogEventDto) {
     this.service.log(data);
   }
   @MessagePattern('debug')
-  async debug(@Payload() data:  { method:string, description: string, data:any }, @Ctx() context: RmqContext) {
+  async debug(@Payload() data: LogEventDto) {
     this.service.debug(data);
   }
 }

@@ -15,11 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@diamond/clients": ["libs/clients/src/index.ts"],
       "@diamond/encryption": ["libs/encryption/src/index.ts"],
-      "@diamond/messengers": ["libs/messengers/src/index.ts"],
-      "@diamond/mongo": ["libs/mongo/src/index.ts"],
-      "@diamond/service-clients": ["libs/service-clients/src/index.ts"],
-      "@diamond/validation": ["libs/validation/src/index.ts"]
+      "@diamond/mongo": ["libs/mongo/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

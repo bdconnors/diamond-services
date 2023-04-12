@@ -1,6 +1,7 @@
 import { Injectable, LoggerService, LogLevel } from '@nestjs/common';
 import winston from 'winston'
 import { SeqTransport } from '@datalust/winston-seq';
+import { LogEventDto } from './dto/log-event.dto';
 
 @Injectable()
 export class AppService implements LoggerService {
@@ -9,7 +10,7 @@ export class AppService implements LoggerService {
 
   constructor(){
     this.logger = winston.createLogger({
-      level: 'info',
+      level: process.env.SEQ_LOG_LEVEL,
       format: winston.format.combine(
         winston.format.errors({ stack: true }),
         winston.format.json(),
@@ -19,8 +20,8 @@ export class AppService implements LoggerService {
             format: winston.format.simple(),
         }),
         new SeqTransport({
-          serverUrl: "http://localhost:5341",
-          apiKey: "APvyFiJEoourwUKH89un",
+          serverUrl: process.env.SEQ_URL,
+          apiKey: process.env.SEQ_API_KEY,
           onError: (e => { console.error(e) }),
           handleExceptions: true,
           handleRejections: true,
@@ -28,19 +29,20 @@ export class AppService implements LoggerService {
       ]
     })
   }
-  log(message: any, ...optionalParams: any[]) {
+
+  log(message: LogEventDto) {
     this.logger.info("{method} - {description}", message);
   }
-  error(message: any, ...optionalParams: any[]) {
+  error(message: LogEventDto) {
     this.logger.error("{method} - {description}", message);
   }
-  warn(message: any, ...optionalParams: any[]) {
+  warn(message: LogEventDto) {
     this.logger.warn("{method} - {description}",message);
   }
-  debug?(message: any, ...optionalParams: any[]) {
+  debug?(message: LogEventDto) {
     this.logger.debug("{method} - {description}", message);
   }
-  verbose?(message: any, ...optionalParams: any[]) {
+  verbose?(message: LogEventDto) {
     this.logger.verbose("{method} - {description}", message);
   }
   setLogLevels?(levels: LogLevel[]) {
