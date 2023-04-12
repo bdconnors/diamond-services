@@ -48,6 +48,13 @@ export class AppController {
     return site;
   }
 
+  @MessagePattern('byOrgId')
+  async getByOrgId(@Payload() data: any) {
+    const sites = await this.service.getByOrgId(data.id)
+    this.logger.info('MSG', 'READ', 'get org sites message', sites);
+    return sites;
+  }
+
   @MessagePattern('findRole')
   async findRole(@Payload() data: any) {
     const role = await this.service.get(data.id);

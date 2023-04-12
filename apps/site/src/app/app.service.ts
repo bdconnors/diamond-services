@@ -1,5 +1,6 @@
 import { AccountsContext, Org, PermissionCollection, Role, RoleCollection, SiteCollection } from "@diamond/mongo";
 import { Injectable } from "@nestjs/common"
+import { Types } from "mongoose";
 
 
 @Injectable()
@@ -28,6 +29,13 @@ export class AppService {
       .populate('org')
       .populate('roles')
       .populate({ path: 'roles', populate: { path: 'permissions'}});
+  }
+
+  async getByOrgId(orgId: string ) {
+    return await this.sites.filter({ org: new Types.ObjectId(orgId) })
+    .populate('org')
+    .populate('roles')
+    .populate({ path: 'roles', populate: { path: 'permissions'}});
   }
 
   async add(orgId: string, name: string) {

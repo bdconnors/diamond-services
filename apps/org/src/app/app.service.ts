@@ -7,6 +7,7 @@ import { lastValueFrom } from "rxjs";
 export class AppService {
   constructor(
     @Inject('USER_SERVICE') private users: ClientRMQ,
+    @Inject('SITE_SERVICE') private sites: ClientRMQ,
     protected readonly orgs: OrgCollection
   ){}
 
@@ -25,8 +26,6 @@ export class AppService {
   }
 
   async getUsers(orgId: string) {
-    console.log('org svc')
-    console.log(orgId);
     try{
       const msg = await this.users.send('byOrgId', { id: orgId });
       return await lastValueFrom(msg);
@@ -34,7 +33,14 @@ export class AppService {
       throw e;
     }
   }
-
+  async getSites(orgId: string) {
+    try{
+      const msg = await this.sites.send('byOrgId', { id: orgId });
+      return await lastValueFrom(msg);
+    }catch(e:any) {
+      throw e;
+    }
+  }
   async update(id: string, name: string) {
     let org = await this.get(id);
     org.name = name;

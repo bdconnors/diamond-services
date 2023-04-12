@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { AddUserDto } from './dto/add-user.dto';
 import { AppService } from './app.service';
-import { ClientRMQ, MessagePattern, Payload } from '@nestjs/microservices';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { LoggerClient } from 'libs/clients/src/lib/LoggerClient';
 
 @Controller('users')

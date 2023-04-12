@@ -34,6 +34,20 @@ export class AppController {
     return org;
   }
 
+  @Get(':id/sites')
+  async getSites(@Param('id') id: string) {
+    const sites = await this.service.getSites(id);
+    this.logger.info('GET', 'READ', 'get org sites request', sites);
+    return sites;
+  }
+
+  @Get(':id/users')
+  async getUsers(@Param('id') id: string) {
+    const users = await this.service.getUsers(id);
+    this.logger.info('GET', 'READ', 'get org users request', users);
+    return users;
+  }
+
   @MessagePattern('get')
   async get(@Payload() data: any) {
     const org = await this.service.get(data.id);

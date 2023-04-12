@@ -13,6 +13,17 @@ export const clients: ClientsModuleOptions = [
     }
   },
   { 
+    name: `SITE_SERVICE`, 
+    transport: Transport.RMQ,
+    options: {
+      urls: [process.env.RABBITMQ_URL],
+      queue: `SITE_QUEUE`,
+      queueOptions: {
+        durable: false
+      }
+    }
+  },
+  { 
     name: `LOGGER_SERVICE`, 
     transport: Transport.RMQ,
     options: {
