@@ -44,10 +44,11 @@ export class AppService {
 
   getPayload(user: User): TokenPayloadDto {
     const expiration = this.getExpiration();
+    const seconds = expiration.getTime() / 1000;
     const payload: TokenPayloadDto = {
       user: user,
       iss: 'auth',
-      exp: expiration
+      exp: seconds
     };
     return payload;
   }
@@ -55,7 +56,7 @@ export class AppService {
   sign(user: User): string {
     const key: string = process.env.SECRET;
     const payload: TokenPayloadDto = this.getPayload(user);
-    return jwt.sign(user, key)
+    return jwt.sign(payload, key)
   }
 
 }

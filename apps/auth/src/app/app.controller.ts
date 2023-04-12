@@ -3,6 +3,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 
 import { AppService } from './app.service';
 import { LoginReqDto } from './dto/login.dto';
+import { VerifyReqDto } from './dto/verify.dto';
 
 @Controller('auth')
 export class AppController {
@@ -14,8 +15,14 @@ export class AppController {
     return { token: token };
   }
   
+  @Post('/verify') 
+  async verify(@Body() dto: VerifyReqDto ){
+    const data = await this.service.decode(dto.token);
+    return { data: data };
+  }
+
   @MessagePattern('login')
-  async verify(@Payload() data: any) {
+  async loginMsg(@Payload() data: any) {
     const result = await this.service.login(data.email, data.password);
     return { data: result };
   }
