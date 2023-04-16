@@ -1,22 +1,17 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { EncryptionModule } from '@diamond/encryption';
 import { ClientsModule } from '@nestjs/microservices';
-import { clients } from './app.options';
-
+import { MongooseModule } from '@nestjs/mongoose';
+import { OrgServiceModule } from './org/org.module';
+import { SiteServiceModule } from './site/site.module';
+import { UserServiceModule } from './user/user.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    EncryptionModule,
-    ClientsModule.register(clients),
-  ],
-  controllers: [
-    AppController
-  ],
-  providers: [
-    AppService
-  ],
+    MongooseModule.forRoot(process.env.MONGO_DB_CONN),
+    UserServiceModule,
+    OrgServiceModule,
+    SiteServiceModule
+  ]
 })
 export class AppModule {}
