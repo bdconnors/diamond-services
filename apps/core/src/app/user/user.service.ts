@@ -1,11 +1,7 @@
 import { EncryptionService } from "@diamond/encryption";
 import { OrgCollection, Role, RoleCollection, Site, SiteCollection, SiteRole, UserCollection } from "@diamond/mongo";
-import { Inject, Injectable } from "@nestjs/common";
-import { ClientRMQ } from "@nestjs/microservices";
+import { Injectable } from "@nestjs/common";
 import { Types } from "mongoose";
-import { lastValueFrom } from "rxjs";
-import { OrgService } from "../org/org.service";
-import { SiteService } from "../site/site.service";
 import { ListUsersDto } from "./dto/list-users.dto";
 
 @Injectable()

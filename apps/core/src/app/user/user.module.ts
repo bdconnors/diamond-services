@@ -3,8 +3,6 @@ import { OrgModule, RoleModule, SiteModule, UserModule } from '@diamond/mongo';
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { LoggerClient } from 'libs/clients/src/lib/LoggerClient';
-import { OrgServiceModule } from '../org/org.module';
-
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 

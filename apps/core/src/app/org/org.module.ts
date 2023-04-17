@@ -4,7 +4,6 @@ import { LoggerClient } from '@diamond/clients';
 import { OrgController } from './org.controller';
 import { OrgService } from './org.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { UserServiceModule } from '../user/user.module';
 
 @Module({
   imports: [

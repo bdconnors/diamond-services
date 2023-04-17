@@ -1,6 +1,4 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { ClientRMQ } from '@nestjs/microservices';
-import { lastValueFrom } from 'rxjs';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { EncryptionService } from '@diamond/encryption';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
