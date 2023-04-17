@@ -1,4 +1,4 @@
-import { OrgCollection, SiteCollection, UserCollection } from "@diamond/mongo";
+import { OrgCollection, Role, RoleCollection, SiteCollection, UserCollection } from "@diamond/mongo";
 import { Injectable } from "@nestjs/common";
 import { Types } from "mongoose";
 
@@ -7,28 +7,28 @@ export class OrgService {
   constructor(
     protected readonly users: UserCollection,
     protected readonly sites: SiteCollection,
+    protected readonly roles: RoleCollection,
     protected readonly orgs: OrgCollection
   ){}
 
 
   async add(name: string) {
-    return await this.orgs.create({ name: name });
+    const roles: Role[] = await this.roles.findAll();
+    return await this.orgs.create({ name: name, roles: roles });
   }
 
   async get(id: string) {
-    let org = await this.orgs.findById(id);
+    let org = await this.orgs.findById(id).populate('roles');
     return org;
   }
 
   async getAll(){
-    return await this.orgs.findAll();
+    return await this.orgs.findAll().populate('roles');
   }
 
   async getUsers(orgId: string) {
     try{
-    const result = await this.users.filter({ org: new Types.ObjectId(orgId) })
-      .populate('org')
-      .populate('roles');
+    const result = await this.users.filter({ org: new Types.ObjectId(orgId) }).populate('org')
       return result;
     }catch(e:any) {
       throw e;

@@ -1,8 +1,9 @@
 import { Controller, Get, Post } from '@nestjs/common';
-import { Body, Param } from '@nestjs/common/decorators';
+import { Body, Param, UseGuards } from '@nestjs/common/decorators';
 import { SiteService } from './site.service';
 import { AddSiteDto } from './dto/add-site.dto';
 import { LoggerClient } from 'libs/clients/src/lib/LoggerClient';
+import { SiteRole, SiteRoleGuard } from '../auth/guard/site-role.guard';
 
 @Controller('sites')
 export class SiteController {
@@ -12,13 +13,17 @@ export class SiteController {
     private readonly logger: LoggerClient
   ){}
 
-  @Get('/:id')
-  async getSite(@Param('id') id: string) {
+  @SiteRole('ADMIN', 'CONTRIBUTOR', 'READER')
+  @UseGuards(SiteRoleGuard)
+  @Get('/:siteId')
+  async getSite(@Param('siteId') id: string) {
     const site = await this.service.get(id);
     this.logger.info('GET', 'READ', 'get site request', site);
     return site;
   }
 
+  @SiteRole('ADMIN', 'CONTRIBUTOR', 'READER')
+  @UseGuards(SiteRoleGuard)
   @Get()
   async listSites() {
     const sites = await this.service.getAll();
@@ -26,6 +31,8 @@ export class SiteController {
     return sites;
   }
 
+  @SiteRole('ADMIN', 'CONTRIBUTOR')
+  @UseGuards(SiteRoleGuard)
   @Post()
   async addSite(@Body() dto: AddSiteDto){
     const site = await this.service.add(dto.orgId, dto.name);

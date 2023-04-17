@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { AddUserDto } from './dto/add-user.dto';
 import { UserService } from './user.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { LoggerClient } from 'libs/clients/src/lib/LoggerClient';
+import { OrgRole, OrgRoleGuard } from '../auth/guard/org-role.guard';
 
 @Controller('users')
 export class UserController {
@@ -12,21 +13,27 @@ export class UserController {
     private readonly logger: LoggerClient,
   ){}
 
+  @OrgRole('ADMIN')
+  @UseGuards(OrgRoleGuard)
   @Post()
   async addUser(@Body() dto: AddUserDto) {
     console.log(dto);
-    const user = await this.service.add(dto.orgId, dto.firstName, dto.lastName, dto.email, dto.password, dto.siteRoles);
+    const user = await this.service.add(dto.firstName, dto.lastName, dto.email, dto.password, dto.type, dto.orgRole, dto.siteRoles);
     this.logger.info('POST', 'CREATE', 'create user request', user);
     return user;
   }
 
+  @OrgRole('ADMIN', 'CONTRIBUTOR', 'READER')
+  @UseGuards(OrgRoleGuard)
   @Get('/:email')
   async get(@Param('email') email: string) {
     const user = await this.service.getByEmail(email);
     this.logger.info('GET', 'READ', 'get user request', user);
     return user;
   }
-
+  
+  @OrgRole('ADMIN', 'CONTRIBUTOR', 'READER')
+  @UseGuards(OrgRoleGuard)
   @Get()
   async getAllUsers() {
     const users = await this.service.getAll();

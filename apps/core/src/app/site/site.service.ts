@@ -10,8 +10,7 @@ export class SiteService {
   constructor(
     protected readonly orgs: OrgCollection,
     protected readonly sites: SiteCollection,
-    protected readonly roles: RoleCollection,
-    protected readonly permissions: PermissionCollection
+    protected readonly roles: RoleCollection
   ){}
 
   async get(id: string) {
@@ -29,7 +28,6 @@ export class SiteService {
   async getAll() {
     return await this.sites.findAll()
       .populate('org')
-      .populate('roles')
       .populate({ path: 'roles', populate: { path: 'permissions'}});
   }
 
@@ -41,10 +39,9 @@ export class SiteService {
   }
 
   async add(orgId: string, name: string) {
-
-    const roles: Role[] = await this.roles.findAll();
     const org: Org = await this.orgs.findById(orgId);
-
+    const roles: Role[] = await this.roles.findAll();
+    
     let site = await this.sites.create({ org: org, name: name, roles: roles });
         
     site = await site.populate('org');

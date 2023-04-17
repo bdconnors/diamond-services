@@ -1,11 +1,8 @@
+import { OrgRole, SiteRole, UserType } from "@diamond/mongo";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsString, Length } from "class-validator";
+import { IsEmail, IsString, Length, IsBoolean} from "class-validator";
 
 export class AddUserDto {
-
-  @ApiProperty()
-  @IsString()
-  orgId: string;
 
   @ApiProperty()
   @IsString()
@@ -23,5 +20,12 @@ export class AddUserDto {
   @Length(8, 20)
   password: string;
 
-  siteRoles: [{ siteId: string, roleId:string }]
+  @ApiProperty()
+  type: UserType;
+
+  @ApiProperty()
+  orgRole: OrgRole;
+
+  @ApiProperty()
+  siteRoles: SiteRole[]
 }

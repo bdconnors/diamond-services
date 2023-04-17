@@ -4,15 +4,26 @@ import { Org } from '../org/org.schema';
 import { Role } from '../role/role.schema';
 import { Site } from '../site/site.schema';
 
+export type RoleType = 'ADMIN' | 'CONTRIBUTOR' | 'READER';
+export type UserType = 'ADMIN' | 'STANDARD';
+
+@Schema()
+export class OrgRole {
+  @Prop({ required: true })
+  id: string;
+
+  @Prop({ required: true })
+  role: RoleType;
+}
 
 @Schema()
 export class SiteRole {
   
-  @Prop({ type: Types.ObjectId, ref: 'Site' })
-  site: Site;
+  @Prop({ required: true })
+  id: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'Role' })
-  role: Role;
+  @Prop({ required: true })
+  role: RoleType;
 }
 
 export type UserDocument = Document & User;
@@ -32,14 +43,14 @@ export class User {
   @Prop({ required: true })
   password: string;
 
-  @Prop({ default: false })
-  verified: boolean;
+  @Prop({ required: true })
+  type: UserType;
 
-  @Prop({ required: true, type: Types.ObjectId, ref: 'Org' })
-  org: Org;
+  @Prop({ required: true })
+  orgRole: OrgRole;
   
   @Prop()
-  roles: SiteRole[];
+  siteRoles: SiteRole[];
 
 }
 export const UserSchema = SchemaFactory.createForClass(User);
