@@ -22,4 +22,6 @@ export class AddUserDto {
   @ApiProperty()
   @Length(8, 20)
   password: string;
+
+  siteRoles: [{ siteId: string, roleId:string }]
 }

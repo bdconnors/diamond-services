@@ -28,12 +28,12 @@ export class UserService {
     return user;
   }
 
-  async add(orgId: string, fname: string, lname: string, email: string, pass: string) {
+  async add(orgId: string, fname: string, lname: string, email: string, pass: string, siteRoles:[{ siteId: string, roleId: string}] ) {
     
     const org = await this.orgs.findById(orgId);
 
     const encryptedPass = await this.encryption.encrypt(pass);
-
+    const roles = await this.makeSiteRoles(siteRoles);
     let user = await this.users.create({
       firstName: fname,
       lastName: lname,
@@ -41,7 +41,7 @@ export class UserService {
       password: encryptedPass,
       verified: false,
       org: org,
-      roles:[]
+      roles:roles
     });
     
     user = await user.populate('org');
@@ -50,7 +50,16 @@ export class UserService {
     return user;
   }
 
+  async makeSiteRoles(siteRoles:[{ siteId: string, roleId: string}]): Promise<SiteRole[]> {
+    let results: SiteRole[] = [];
 
+    let curSiteRole;
+    for(let i = 0; i < siteRoles.length; i++) {
+      curSiteRole = await this.makeSiteRole(siteRoles[i].siteId, siteRoles[i].roleId);
+      results.push(curSiteRole);
+    }
+    return results;
+  }
   async get(id: string) {
     return await this.users.findById(id) 
       .populate('org')

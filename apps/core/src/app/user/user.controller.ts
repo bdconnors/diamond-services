@@ -15,7 +15,7 @@ export class UserController {
   @Post()
   async addUser(@Body() dto: AddUserDto) {
     console.log(dto);
-    const user = await this.service.add(dto.orgId, dto.firstName, dto.lastName, dto.email, dto.password);
+    const user = await this.service.add(dto.orgId, dto.firstName, dto.lastName, dto.email, dto.password, dto.siteRoles);
     this.logger.info('POST', 'CREATE', 'create user request', user);
     return user;
   }

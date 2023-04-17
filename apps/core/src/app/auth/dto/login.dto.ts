@@ -2,6 +2,11 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsString } from "class-validator";
 
 export class LoginReqDto {
+  
+  @ApiProperty()
+  @IsString()
+  siteId: string;
+
   @ApiProperty()
   @IsString()
   email: string;
@@ -10,6 +15,7 @@ export class LoginReqDto {
   @IsString()
   password: string; 
 }
+
 export class LoginResDto {
   @ApiProperty()
   @IsString()
