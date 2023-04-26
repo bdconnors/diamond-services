@@ -1,24 +1,18 @@
 import { Injectable } from "@nestjs/common";
 import { OrgCollection } from "./org/org.collection";
-import { PermissionCollection } from "./permission/permission.collection";
-import { RoleCollection } from "./role/role.collection";
 import { SiteCollection } from "./site/site.collection";
 import { UserCollection } from "./user/user.collection";
-;
-import { Permission } from "./permission/permission.schema";
-import { Role } from "./role/role.schema";
+
 
 @Injectable()
 export class AccountsContext {
   constructor(
     public readonly orgs: OrgCollection,
     public readonly sites: SiteCollection,
-    public readonly roles: RoleCollection,
-    public readonly permissions: PermissionCollection,
     public readonly users: UserCollection,
   ){}
 
-  async onModuleInit() {
+  /**async onModuleInit() {
     try{
 
       const permissions = await this.permissions.findAll();
@@ -99,5 +93,5 @@ export class AccountsContext {
       }
     ]; 
     await this.roles.createMany(defaultRoles);  
-  }
+  }**/
 }

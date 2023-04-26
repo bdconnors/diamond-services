@@ -1,4 +1,4 @@
-import { OrgCollection, Role, RoleCollection, SiteCollection, UserCollection } from "@diamond/mongo";
+import { OrgCollection, SiteCollection, UserCollection } from "@diamond/mongo";
 import { Injectable } from "@nestjs/common";
 import { Types } from "mongoose";
 
@@ -7,28 +7,26 @@ export class OrgService {
   constructor(
     protected readonly users: UserCollection,
     protected readonly sites: SiteCollection,
-    protected readonly roles: RoleCollection,
     protected readonly orgs: OrgCollection
   ){}
 
 
   async add(name: string) {
-    const roles: Role[] = await this.roles.findAll();
-    return await this.orgs.create({ name: name, roles: roles });
+    return await this.orgs.create({ name: name });
   }
 
   async get(id: string) {
-    let org = await this.orgs.findById(id).populate('roles');
+    let org = await this.orgs.findById(id);
     return org;
   }
 
   async getAll(){
-    return await this.orgs.findAll().populate('roles');
+    return await this.orgs.findAll();
   }
 
   async getUsers(orgId: string) {
     try{
-    const result = await this.users.filter({ org: new Types.ObjectId(orgId) }).populate('org')
+    const result = await this.users.filter({ org: new Types.ObjectId(orgId) });
       return result;
     }catch(e:any) {
       throw e;
@@ -36,10 +34,7 @@ export class OrgService {
   }
   async getSites(orgId: string) {
     try{
-      return await this.sites.filter({ org: new Types.ObjectId(orgId) })
-      .populate('org')
-      .populate('roles')
-      .populate({ path: 'roles', populate: { path: 'permissions'}});
+      return await this.sites.filter({ org: new Types.ObjectId(orgId) });
     }catch(e:any) {
       throw e;
     }

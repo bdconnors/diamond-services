@@ -8,11 +8,11 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { SetMetadata } from "@nestjs/common";
-import { RoleType } from '@diamond/mongo';
+import { UserRole } from '@diamond/mongo';
 
 
 export const SITE_ROLES_KEY = "siteroles";
-export const SiteRole = (...roles: RoleType[]) => SetMetadata(SITE_ROLES_KEY, roles);
+export const SiteRole = (...roles: UserRole[]) => SetMetadata(SITE_ROLES_KEY, roles);
 
 @Injectable()
 export class SiteRoleGuard implements CanActivate {

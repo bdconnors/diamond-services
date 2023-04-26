@@ -23,8 +23,8 @@ export class OrgController {
     return orgs;
   }
 
-  @OrgRole('ADMIN', 'CONTRIBUTOR')
-  @UseGuards(OrgRoleGuard)
+  //@OrgRole('ADMIN', 'CONTRIBUTOR')
+  //@UseGuards(OrgRoleGuard)
   @Post('/create')
   async create(@Body() body: AddOrgDto) {
     const org = await this.service.add(body.name);

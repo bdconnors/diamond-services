@@ -31,9 +31,9 @@ export class SiteController {
     return sites;
   }
 
-  @SiteRole('ADMIN', 'CONTRIBUTOR')
-  @UseGuards(SiteRoleGuard)
-  @Post()
+  //@SiteRole('ADMIN', 'CONTRIBUTOR')
+  //@UseGuards(SiteRoleGuard)
+  @Post('/create')
   async addSite(@Body() dto: AddSiteDto){
     const site = await this.service.add(dto.orgId, dto.name);
     this.logger.info('POST', 'CREATE', 'create site request', site);

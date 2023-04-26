@@ -8,11 +8,11 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { SetMetadata } from "@nestjs/common";
-import { UserType } from '@diamond/mongo';
+import { UserRole } from '@diamond/mongo';
 
 
 export const USER_TYPE_KEY = "usertypes";
-export const User = (...types: UserType[]) => SetMetadata(USER_TYPE_KEY, types);
+export const User = (...types: UserRole[]) => SetMetadata(USER_TYPE_KEY, types);
 
 @Injectable()
 export class UserGuard implements CanActivate {

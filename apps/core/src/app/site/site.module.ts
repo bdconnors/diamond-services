@@ -1,4 +1,4 @@
-import { OrgModule, PermissionModule, RoleModule, SiteModule } from '@diamond/mongo';
+import { OrgModule, SiteModule } from '@diamond/mongo';
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { LoggerClient } from 'libs/clients/src/lib/LoggerClient';
@@ -8,8 +8,6 @@ import { SiteService } from './site.service';
 @Module({
   imports: [
     SiteModule,
-    RoleModule,
-    PermissionModule,
     OrgModule,
     ClientsModule.register([
       { 

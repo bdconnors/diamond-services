@@ -8,11 +8,11 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { SetMetadata } from "@nestjs/common";
-import { RoleType } from '@diamond/mongo';
+import { UserRole } from '@diamond/mongo';
 
 
 export const ORG_ROLES_KEY = "orgroles";
-export const OrgRole = (...roles: RoleType[]) => SetMetadata(ORG_ROLES_KEY, roles);
+export const OrgRole = (...roles: UserRole[]) => SetMetadata(ORG_ROLES_KEY, roles);
 
 @Injectable()
 export class OrgRoleGuard implements CanActivate {
@@ -42,8 +42,8 @@ export class OrgRoleGuard implements CanActivate {
       // so that we can access it in our route handlers
       request['user'] = payload;
       console.log(payload.user);
-      console.log(payload.user.orgRole.role.title);
-      const includesRole = roles.includes(payload.user.orgRole.role);
+      console.log(payload.user.orgRole);
+      const includesRole = roles.includes(payload.user.orgRole);
       return includesRole;
     } catch {
       throw new UnauthorizedException();

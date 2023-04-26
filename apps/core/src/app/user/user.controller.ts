@@ -13,12 +13,12 @@ export class UserController {
     private readonly logger: LoggerClient,
   ){}
 
-  @OrgRole('ADMIN')
-  @UseGuards(OrgRoleGuard)
+  //@OrgRole('ADMIN')
+  //@UseGuards(OrgRoleGuard)
   @Post()
   async addUser(@Body() dto: AddUserDto) {
     console.log(dto);
-    const user = await this.service.add(dto.firstName, dto.lastName, dto.email, dto.password, dto.type, dto.orgRole, dto.siteRoles);
+    const user = await this.service.add(dto.orgId, dto.firstName, dto.lastName, dto.email, dto.password, dto.orgRole, dto.mobileNumber, dto.siteRoles);
     this.logger.info('POST', 'CREATE', 'create user request', user);
     return user;
   }

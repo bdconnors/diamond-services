@@ -1,5 +1,5 @@
 import { EncryptionModule } from '@diamond/encryption';
-import { OrgModule, RoleModule, SiteModule, UserModule } from '@diamond/mongo';
+import { OrgModule, SiteModule, UserModule } from '@diamond/mongo';
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { LoggerClient } from 'libs/clients/src/lib/LoggerClient';
@@ -12,7 +12,6 @@ import { UserService } from './user.service';
     UserModule,
     OrgModule,
     SiteModule,
-    RoleModule,
     ClientsModule.register([
       { 
         name: `LOGGER_SERVICE`, 
